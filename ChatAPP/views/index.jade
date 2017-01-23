@@ -1,17 +1,83 @@
-extends layout
-doctype  html
+doctype html
+html
+  head
+    title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/bootstrap-3.3.7-dist/css/bootstrap.min.css')
+    script(src='/javascripts/jquery-3.1.1.min.js')
+    script(src='/bootstrap-3.3.7-dist/js/bootstrap.min.js')
+  body(style='background: #dcd9da')
+    // h1= title     enter name and the default name is mine
+    .container
+      .row
+        .col-md-4.col-md-offset-4
+          .panel.panel-default(style='margin-top: 100px')
+            .panel-heading(style='background: #0d6aad')
+              h4(align='center', style='color: #ffffff;')
+                | FSE Chat Room
+            .panel-body(style='background: #e0e1ea')
+              .form-group
+                  textarea#Chat.form-control(readonly=true ,style='width:100%; height:300px; scrollTop:300px; resize:none; ') #{global.Content}
+                 // -$("#Chat").scrollTop=  $("#Chat").scrollHeight;
+              .form-group
+                  textarea#Write.form-control(type='write', placeholder='Hello '+global.LastName+'~',style='resize:none')
+              .form-group
+                  button#Post.btn.btn-success.btn-block(type='button')
+                    | Post
+              .form-group
+                  button#Exit.btn.btn-danger.btn-block(type='button')
+                    | Exit
+                  // online partners
+              //  .col-lg-offset-7
+              //      p Online Now
+              //-for (var i=0;i<user.length;i++)
+              //  .col-lg-offset-7
+              //      p #{user[i].FirstName} #{user[i].LastName}
+script(type='text/javascript').
+    $(document).ready(function () {
+        var Exit = $("#Exit");
+        var Post = $("#Post");
+        var Chat = $("#Chat");
+    //    $("#Chat").verticalScrollPosition=$("#Chat").maxVerticalScrollPosition;
+        //Chat.verticalScrollPosition = Chat.maxVerticalScrollPosition;
+        Post.click(function () {
+            location.reload();
+            $.ajax({
+                url: "/Chat",
+                type: "POST",
+                timeout: 36000,
+                data: {
+                    txt: $("#Write").val()
+                },
+                dataType: "text",
+                success: function (data, textStatus) {
+                    var dataJson = eval("(" + data + ")");
+                    window.location.reload(true);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error:" + textStatus);
+                    window.location.reload(true);
+                }
 
-block content
-    h1= "FSE Chat Room"
-    p Welcome to #{title}
-    //
-    div #{time}11
-    ul
-        li Item A
-        li Item B
-        li Item C
+            })
+        });
+        Exit.click(function () {
+            console.log('enter exit!');
+            $.ajax({
+                url: "/exit",
+                type: "POST",
+                timeout: 36000,
+                dataType: "text",
+                success: function (data, textStatus) {
+                    //alert(data);
+                    window.location.href = "/login";
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("error:" + textStatus);
+                }
 
-    input(type='checkbox', checked)
-    input(type='checkbox' name='agreement' checked
+            })
+        })
+    })
 
 

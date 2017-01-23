@@ -1,0 +1,66 @@
+doctype html
+html
+  head
+    title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/bootstrap-3.3.7-dist/css/bootstrap.min.css')
+    script(src='/javascripts/jquery-3.1.1.min.js')
+    script(src='/bootstrap-3.3.7-dist/js/bootstrap.min.js')
+  body(style='background: #dcd9da')
+    // h1= title     enter name and the default name is mine
+    .container
+      .row
+        .col-md-4.col-md-offset-4
+          .panel.panel-default(style='margin-top: 100px')
+            .panel-heading(style='background: #0d6aad')
+              h4(align='center', style='color: #ffffff;')
+                | FSE Chat Room
+            .panel-body(style='background: #e0e1ea')
+              .form-group
+                .input-group
+                  span.input-group-addon First Name
+                  input#FirstName.form-control(type='FirstName', placeholder='Yuxin')
+              .form-group
+                .input-group
+                  span.input-group-addon Last Name
+                  input#LastName.form-control(type='LastName', placeholder='Wei')
+              .form-group
+                .col-lg-offset-1
+                  |find help by email
+                  a(href='/register')  yuxin.wei@west.cmu.edu
+              .form-group
+                button#login.btn.btn-success.btn-block(type='button')
+                  | Enter
+    script(type='text/javascript').
+      $(document).ready(function () {
+        var FirstName = $("#FirstName");
+        var LastName = $("#LastName");
+        var login = $("#login");
+        console.log(FirstName + LastName);
+        login.click(function () { //get personal information
+              $.ajax({
+                      url: "/login/userLogin",  //mark
+                      data: {
+                        FirstName: $("#FirstName").val(),
+                        LastName: $("#LastName").val()
+                      },
+                      type: "POST",
+                      timeout: 36000,
+                      dataType: "text",
+                      success: function (data, textStatus) {
+                        //alert(data);
+                        var dataJson = eval("(" + data + ")");
+                        //alert("success");
+                        window.location.href = "/"; //enter into the room
+                        //window.location.href='/?FirstName='+FirstName;
+
+                      },
+                      error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("error:" + textStatus);
+                      }
+                    }
+            );
+        })
+        ;
+      })
+      ;
